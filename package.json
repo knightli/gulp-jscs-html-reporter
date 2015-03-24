@@ -1,0 +1,31 @@
+{
+  "name": "gulp-jscs-html-reporter",
+  "version": "0.1.0",
+  "description": "Simple generator of HTML report for gulp-jssc that writes its output to a html file which looks pretty",
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "debug": "browserify util/app.js > util/bundle.js",
+    "browserify": "browserify util/app.js | uglifyjs > util/bundle.js",
+    "build": "npm run browserify"
+  },
+  "dependencies": {
+    "node-jsx": "~0.11.0",
+    "react": "^0.12.0"
+  },
+  "devDependencies": {
+    "browserify": "~6.0.3",
+    "reactify": "~0.14.0",
+    "uglify-js": "~2.4.15"
+  },
+  "browserify": {
+    "transform": [
+      "reactify"
+    ]
+  }
+}
