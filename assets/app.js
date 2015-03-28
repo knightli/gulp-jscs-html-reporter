@@ -10,6 +10,7 @@ function getAllReporters(){
   var reporters = [];
   stateScripts.map(function(script) {
     var reporter = JSON.parse(script.innerHTML);
+    reporter.expand = false;
     reporters.push(reporter);
   });
   return reporters;
