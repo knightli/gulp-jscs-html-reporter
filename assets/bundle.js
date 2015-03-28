@@ -9,9 +9,9 @@ function getAllReporters(){
   var stateScripts = document.querySelectorAll('.stateScript');
   stateScripts = Array.prototype.slice.call(stateScripts);
   var reporters = [];
-  stateScripts.map(function(script) {
+  stateScripts.map(function(script,idx) {
     var reporter = JSON.parse(script.innerHTML);
-    reporter.expand = false;
+    reporter.key = idx;
     reporters.push(reporter);
   });
   return reporters;
@@ -39,7 +39,7 @@ var Detail = React.createClass({displayName: "Detail",
 
     var content = errsets.length ? errsets.map(function(errset){
       return (
-        React.createElement(ErrorSet, {data: errset})
+        React.createElement(ErrorSet, {key: errset.filename, data: errset})
       );
     }) : 'errsets length is 0';
 
@@ -109,7 +109,7 @@ function renderLine(code, line, column){
   }
 
   return (
-    React.createElement("tr", {className: lineClass}, 
+    React.createElement("tr", {key: line, className: lineClass}, 
       React.createElement("td", {className: "col"}, line), 
       React.createElement("td", null, 
         React.createElement("code", {
@@ -195,7 +195,7 @@ var ErrorSet = React.createClass({displayName: "ErrorSet",
 
     var content = errorList.length ? errorList.map(function(error){
       return (
-        React.createElement(ErrorItem, {error: error, filename: filename})
+        React.createElement(ErrorItem, {key: error.line+','+error.column, error: error, filename: filename})
       );
     }) : 'errsets length is 0';
 
@@ -283,7 +283,7 @@ var ReporterApps = React.createClass({displayName: "ReporterApps",
 
     var content = reporters.map(function(reporter){
       return (
-        React.createElement(Reporter, {errsets: reporter.errsets, options: reporter.options})
+        React.createElement(Reporter, {key: reporter.key, errsets: reporter.errsets, options: reporter.options})
       );
     });
 

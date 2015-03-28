@@ -29,7 +29,7 @@ function renderLine(code, line, column){
   }
 
   return (
-    <tr className={lineClass}>
+    <tr key={line} className={lineClass}>
       <td className="col">{line}</td>
       <td>
         <code

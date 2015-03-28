@@ -41,7 +41,7 @@ var ReporterApps = React.createClass({
 
     var content = reporters.map(function(reporter){
       return (
-        <Reporter errsets={reporter.errsets} options={reporter.options} />
+        <Reporter key={reporter.key} errsets={reporter.errsets} options={reporter.options} />
       );
     });
 

@@ -13,7 +13,7 @@ var ErrorSet = React.createClass({
 
     var content = errorList.length ? errorList.map(function(error){
       return (
-        <ErrorItem error={error} filename={filename} />
+        <ErrorItem key={error.line+','+error.column} error={error} filename={filename} />
       );
     }) : 'errsets length is 0';
 

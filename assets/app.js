@@ -8,9 +8,9 @@ function getAllReporters(){
   var stateScripts = document.querySelectorAll('.stateScript');
   stateScripts = Array.prototype.slice.call(stateScripts);
   var reporters = [];
-  stateScripts.map(function(script) {
+  stateScripts.map(function(script,idx) {
     var reporter = JSON.parse(script.innerHTML);
-    reporter.expand = false;
+    reporter.key = idx;
     reporters.push(reporter);
   });
   return reporters;

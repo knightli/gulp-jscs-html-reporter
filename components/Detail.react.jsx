@@ -12,7 +12,7 @@ var Detail = React.createClass({
 
     var content = errsets.length ? errsets.map(function(errset){
       return (
-        <ErrorSet data={errset} />
+        <ErrorSet key={errset.filename} data={errset} />
       );
     }) : 'errsets length is 0';
 
