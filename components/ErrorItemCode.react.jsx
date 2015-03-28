@@ -4,14 +4,14 @@
 
 var React = require('react');
 
-var strUtil = require('../util/util.str');
+var Helpers = require('../util/Helpers');
 
 function renderLine(code, line, column){
   var isErrorLine = typeof column !== 'undefined';
   var lineClass = isErrorLine ? 'line error-line' : 'line nomarl-line';
 
   function handleCode(str) {
-    return strUtil.spaceTrans(strUtil.encodeHtml(str));
+    return Helpers.spaceTrans(Helpers.encodeHtml(str));
   }
 
   if(isErrorLine) {
@@ -63,7 +63,10 @@ var ErrorItemCode = React.createClass({
 
 
     return (
-      <div className="error-item-code">
+      <div className={Helpers.cx({
+        "error-item-code": true,
+        "hide": !error.expandCode
+      })}>
         <table>
           {content}
         </table>

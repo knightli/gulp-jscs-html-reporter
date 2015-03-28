@@ -8,20 +8,19 @@ var Reporter = require('./Reporter.react.jsx');
 var AppStore = require('../store/AppStore');
 
 function getStateFromStore(){
-  return {
+  var ret = {
     reporters: AppStore.getData()
-  }
+  };
+  return ret;
 }
 
 var ReporterApps = React.createClass({
 
   getInitialState: function(props){
-
     if(this.props.reporters){
-      AppStore.init(this.props.reporters);
+      AppStore.init(this.props.reporters, this.props.options);
     }
     return getStateFromStore();
-
   },
 
   componentDidMount: function() {
@@ -37,7 +36,7 @@ var ReporterApps = React.createClass({
   },
 
   render: function(){
-    var reporters = this.props.reporters;
+    var reporters = this.state.reporters;
 
     var content = reporters.map(function(reporter){
       return (

@@ -2,6 +2,8 @@
   margin: 20px 0;
 }
 
+.reporter
+
 .summary {
   padding: 5px;
   margin-bottom: 10px;
@@ -14,7 +16,7 @@
 
 .error-item-code,
 .error-set{
-  margin-left:10px;
+  margin-left: 1em;
 }
 
 .error-item{
@@ -29,3 +31,26 @@
   background-color:yellow;
 }
 
+.char-label{
+  padding: .1em .3em;
+  margin: 0 .2em;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}
+
+.char-label.label-default{
+  background-color:#ABABAB;
+}
+
+.panel-primary>.panel-heading .badge.error{
+  background-color:#d9534f;
+  color: #fff;
+}
+
+.error-item-msg-text{
+  font-size: 90%;
+  color: #d9534f;
+  margin-left:1em;
+}
