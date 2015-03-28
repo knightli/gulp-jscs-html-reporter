@@ -17,7 +17,7 @@ function getAllReporters(){
 
 var reporters = getAllReporters();
 
-React.renderComponent(
+React.render(
   <ReporterApps reporters={reporters} />,
   document.getElementById('wrapper')
 );

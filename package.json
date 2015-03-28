@@ -10,17 +10,17 @@
     "index.js"
   ],
   "scripts": {
-    "debug": "browserify util/app.js > util/bundle.js",
-    "browserify": "browserify util/app.js | uglifyjs > util/bundle.js",
+    "debug": "browserify assets/app.js > assets/bundle.js",
+    "browserify": "browserify assets/app.js | uglifyjs > assets/bundle.js",
     "build": "npm run browserify"
   },
   "dependencies": {
-    "node-jsx": "~0.11.0",
-    "react": "^0.12.0"
+    "node-jsx": "^0.12.0",
+    "react": "^0.13.0"
   },
   "devDependencies": {
-    "browserify": "~6.0.3",
-    "reactify": "~0.14.0",
+    "browserify": "^6.2.0",
+    "reactify": "^0.15.2",
     "uglify-js": "~2.4.15"
   },
   "browserify": {
