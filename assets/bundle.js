@@ -44,9 +44,10 @@ module.exports = AppActions;
 
 var React = require('react');
 var ReporterApps = require('../components/ReporterApps.react.jsx');
+var assign = require('object-assign');
 
 // 初始 state 从 initial-state 这个script tag 内拿 (server 首屏吐在这个tag里)
-function getAllData(){
+function getInitState(){
   var data = {
     reporters : [],
     fileCount : 0,
@@ -56,11 +57,17 @@ function getAllData(){
   stateScripts = Array.prototype.slice.call(stateScripts);
   stateScripts.map(function(script,idx) {
     var reporter = JSON.parse(script.innerHTML);
+
+    if (!data.options && reporter.options) {
+      data.options = reporter.options;
+    }
+
     data.reporters.push(reporter);
-    if(reporter.errsets.length) {
+
+    if (reporter.errsets.length) {
       reporter.errsets.map(function(errset){
         data.fileCount ++;
-        if(errset.errorList && errset.errorList.length) {
+        if (errset.errorList && errset.errorList.length) {
           data.errorCount += errset.errorList.length;
         }
       })
@@ -69,20 +76,16 @@ function getAllData(){
   return data;
 }
 
-var data = getAllData();
-var reporters = data.reporters;
-var errorCount = data.errorCount;
-var fileCount = data.fileCount;
-
-var options = {expandCode:false, expandErrorSet: false};
+var initState = getInitState();
+initState = assign({options: {expandCode:false, expandErrorSet: false}}, initState);
 
 //defaultExpand true: 默认展开  false: 默认折叠
 React.render(
-  React.createElement(ReporterApps, {reporters: reporters, options: options, errorCount: errorCount, fileCount: fileCount}),
+  React.createElement(ReporterApps, React.__spread({},  initState)),
   document.getElementById('wrapper')
 );
 
-},{"../components/ReporterApps.react.jsx":9,"react":172}],3:[function(require,module,exports){
+},{"../components/ReporterApps.react.jsx":9,"object-assign":17,"react":172}],3:[function(require,module,exports){
 /** @jsx React.DOM */
 
 // Detail 组件: 展示具体的错误信息
@@ -333,6 +336,21 @@ function getStateFromStore(){
   return ret;
 }
 
+function getTimeStr(time) {
+  if(!time) return null;
+  time = new Date(time);
+  var day = time.getDate();
+  var hh = time.getHours();
+  var mm = time.getMinutes();
+
+  day = day < 10 ? "0" + day : day;
+  hh = hh < 10 ? "0" + hh : hh;
+  mm = mm < 10 ? "0" + mm : mm;
+
+  var str = (time.getFullYear() + "年") + (time.getMonth() - -1) + "月" + day + "日 " + hh + ":" + mm;
+  return str;
+}
+
 var ReporterApps = React.createClass({displayName: "ReporterApps",
 
   getInitialState: function(props){
@@ -370,11 +388,15 @@ var ReporterApps = React.createClass({displayName: "ReporterApps",
         React.createElement(Reporter, {key: reporter.key, errsets: reporter.errsets, options: reporter.options})
       );
     });
+    console.log('this.props:',this.props);
+    var timeStr = getTimeStr(this.props.options.time);
+
 
     return (
       React.createElement("div", {id: "reporter-app", className: "reporter-app"}, 
         React.createElement("div", {className: "navbar navbar-inverse navbar-fixed-top"}, 
-          React.createElement("span", {className: "navbar-brand"}, "Found ", React.createElement("span", {className: "badge error"}, this.props.errorCount), " errors in ", this.props.fileCount, " files! "), 
+          React.createElement("span", {className: "navbar-brand"}, "Found ", React.createElement("span", {className: "badge error"}, this.props.errorCount), " errors in ", this.props.fileCount, " files!"), 
+          React.createElement("span", {className: "timestamp"}, timeStr), 
           React.createElement("label", {className: Helpers.cx({
             "label-success": this.state.isAllCodeExpand,
             "label-default": !this.state.isAllCodeExpand,

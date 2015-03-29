@@ -18,6 +18,21 @@ function getStateFromStore(){
   return ret;
 }
 
+function getTimeStr(time) {
+  if(!time) return null;
+  time = new Date(time);
+  var day = time.getDate();
+  var hh = time.getHours();
+  var mm = time.getMinutes();
+
+  day = day < 10 ? "0" + day : day;
+  hh = hh < 10 ? "0" + hh : hh;
+  mm = mm < 10 ? "0" + mm : mm;
+
+  var str = (time.getFullYear() + "年") + (time.getMonth() - -1) + "月" + day + "日 " + hh + ":" + mm;
+  return str;
+}
+
 var ReporterApps = React.createClass({
 
   getInitialState: function(props){
@@ -55,11 +70,15 @@ var ReporterApps = React.createClass({
         <Reporter key={reporter.key} errsets={reporter.errsets} options={reporter.options} />
       );
     });
+    console.log('this.props:',this.props);
+    var timeStr = getTimeStr(this.props.options.time);
+
 
     return (
       <div id="reporter-app" className="reporter-app">
         <div className="navbar navbar-inverse navbar-fixed-top">
-          <span className="navbar-brand">Found <span className="badge error">{this.props.errorCount}</span> errors in {this.props.fileCount} files! </span>
+          <span className="navbar-brand">Found <span className="badge error">{this.props.errorCount}</span> errors in {this.props.fileCount} files!</span>
+          <span className="timestamp">{timeStr}</span>
           <label className={Helpers.cx({
             "label-success": this.state.isAllCodeExpand,
             "label-default": !this.state.isAllCodeExpand,
