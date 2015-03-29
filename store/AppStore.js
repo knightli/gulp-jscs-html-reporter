@@ -108,17 +108,103 @@ function isAllCodeExpandedInErrorSet(errset){
   }
 }
 
+function isAllCodeExpand() {
+  var reporters = _data;
+
+  for(var i=0,len=reporters.length; i<len; i++) {
+    var errsets = reporters[i].errsets;
+
+    if(errsets) {
+      for(var j=0,l=errsets.length; j<l; j++) {
+        var errset = errsets[j];
+        if(!isAllCodeExpandedInErrorSet(errset)) return false;
+      }
+    }
+  }
+  return true;
+}
+
+function isAllErrorSetExpand() {
+  var reporters = _data;
+
+  for(var i=0,len=reporters.length; i<len; i++) {
+    var errsets = reporters[i].errsets;
+
+    if(errsets) {
+      for(var j=0,l=errsets.length; j<l; j++) {
+        var errset = errsets[j];
+        if(!errset.expandErrorSet) return false;
+      }
+    }
+  }
+  return true;
+}
+
+function setCodeExpandErrorSet(errset, flag) {
+  errset.errorList.map(function(error){
+    error.expandCode = flag;
+  });
+}
+
 function toggleCodeExpandErrorSet(errset) {
   if(useImmuteable) {
     errset = getDataByKey(errset.key);
   }
   if(errset) {
-
     var isAllExpanded = isAllCodeExpandedInErrorSet(errset);
+    setCodeExpandErrorSet(errset, !isAllExpanded);
+  }
+}
 
-    errset.errorList.map(function(error){
-      error.expandCode = !isAllExpanded;
-    });
+function toggleErrorSetExpand(errset) {
+  if(useImmuteable) {
+    errset = getDataByKey(errset.key);
+  }
+  if(errset) {
+
+    errset.expandErrorSet = !errset.expandErrorSet;
+
+  }
+}
+
+function toggleCodeExpandAll() {
+  var expandCode = true;
+  if(isAllCodeExpand()) {
+    expandCode = false;
+  }
+
+  var reporters = _data;
+
+  for(var i=0,len=reporters.length; i<len; i++) {
+
+    var errsets = reporters[i].errsets;
+
+    if(errsets) {
+      for(var j=0,l=errsets.length; j<l; j++) {
+        var errset = errsets[j];
+        setCodeExpandErrorSet(errset, expandCode);
+      }
+    }
+  }
+}
+
+function toggleErrorSetExpandAll() {
+  var expandErrorSet = true;
+  if(isAllErrorSetExpand()) {
+    expandErrorSet = false;
+  }
+
+  var reporters = _data;
+
+  for(var i=0,len=reporters.length; i<len; i++) {
+    var errsets = reporters[i].errsets;
+
+    if(errsets) {
+      for(var j=0,l=errsets.length; j<l; j++) {
+        var errset = errsets[j];
+        errset.expandErrorSet = expandErrorSet;
+      }
+    }
   }
 }
 
@@ -128,6 +214,8 @@ var AppStore = assign({}, EventEmitter.prototype, {
     return _data;
   },
   isAllCodeExpandedInErrorSet: isAllCodeExpandedInErrorSet,
+  isAllCodeExpand: isAllCodeExpand,
+  isAllErrorSetExpand: isAllErrorSetExpand,
   emitChange: function(){
     this.emit(CHANGE_EVENT);
   },
@@ -153,8 +241,18 @@ AppDispatcher.register(function(action) {
       AppStore.emitChange();
       break;
 
-    case "XXXXXX":
-      xxxxxx();
+    case "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND":
+      toggleErrorSetExpand(action.errset);
+      AppStore.emitChange();
+      break;
+
+    case "REPORTER_ERROR_TOGGLE_CODE_EXPAND_ALL":
+      toggleCodeExpandAll();
+      AppStore.emitChange();
+      break;
+
+    case "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND_ALL":
+      toggleErrorSetExpandAll();
       AppStore.emitChange();
       break;
 

@@ -8,6 +8,9 @@ var AppActions = require('../actions/AppActions');
 var AppStore = require('../store/AppStore');
 
 var Summary = React.createClass({
+  _toggleErrorsetExpand: function() {
+    AppActions.toggleErrorsetExpand(this.props.errsets[0]);
+  },
   _toggleCodeExpandErrorSet: function() {
     AppActions.toggleCodeExpandErrorSet(this.props.errsets[0]);
   },
@@ -20,13 +23,19 @@ var Summary = React.createClass({
     return (
       <div className="summary panel-heading">
         <div className="panel-title">
+          <code>{filename}</code> found <span className="badge error">{errorCount}</span> errors!
           <label className={Helpers.cx({
             "label-success": isAllExpanded,
             "label-default": !isAllExpanded,
+            "navbar-toggle": true,
             "label": true,
-            "char-label": true
-          })} onClick={this._toggleCodeExpandErrorSet}>Ⓒ</label>
-          <code>{filename}</code> found <span className="badge error">{errorCount}</span> errors!
+          })} onClick={this._toggleCodeExpandErrorSet}>Ⓒ展开代码</label>
+          <label className={Helpers.cx({
+            "label-success": errset.expandErrorSet,
+            "label-default": !errset.expandErrorSet,
+            "navbar-toggle": true,
+            "label": true,
+          })} onClick={this._toggleErrorsetExpand}>Ⓓ展开详情</label>
         </div>
       </div>
     );

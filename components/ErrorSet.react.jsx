@@ -4,6 +4,7 @@
 
 var React = require('react');
 var ErrorItem = require('./ErrorItem.react.jsx');
+var Helpers = require('../util/Helpers');
 
 var ErrorSet = React.createClass({
   render: function(){
@@ -18,7 +19,10 @@ var ErrorSet = React.createClass({
     }) : 'errsets length is 0';
 
     return (
-      <div className="error-set">{content}</div>
+      <div className={Helpers.cx({
+        "error-set": true,
+        "hide": !data.expandErrorSet
+      })}>{content}</div>
     );
   }
 });

@@ -16,10 +16,22 @@ var AppActions = {
     });
   },
 
-  xxxxxx: function(param) {
+  toggleErrorsetExpand: function(errset) {
     AppDispatcher.dispatch({
-      actionType: "XXXXXX",
-      param: param
+      actionType: "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND",
+      errset: errset
+    });
+  },
+
+  toggleCodeExpandAll: function() {
+    AppDispatcher.dispatch({
+      actionType: "REPORTER_ERROR_TOGGLE_CODE_EXPAND_ALL"
+    });
+  },
+
+  toggleErrorsetExpandAll: function() {
+    AppDispatcher.dispatch({
+      actionType: "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND_ALL"
     });
   }
 };

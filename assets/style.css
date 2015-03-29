@@ -1,12 +1,17 @@
 #wrapper {
-  margin: 20px 0;
+  margin: 2em 0;
 }
 
-.reporter
+.topbar{
+  position:;
+}
+
+.reporters{
+  padding-top: 40px;
+}
 
 .summary {
-  padding: 5px;
-  margin-bottom: 10px;
+  padding: .5em;
 }
 
 .nomarl-line code,
@@ -17,10 +22,12 @@
 .error-item-code,
 .error-set{
   margin-left: 1em;
+  margin-right: 1em;
 }
 
 .error-item{
-  margin-bottom: 10px;
+  margin-bottom: .5em;
+  margin-top: .5em;
 }
 
 .error-item-code{
@@ -31,20 +38,34 @@
   background-color:yellow;
 }
 
-.char-label{
-  padding: .1em .3em;
-  margin: 0 .2em;
+.reporter-app .label{
   -webkit-user-select:none;
   -moz-user-select:none;
   -ms-user-select:none;
   user-select:none;
 }
 
-.char-label.label-default{
+.reporter-app .navbar-fixed-top .label {
+  padding: .4em .6em .5em;
+  line-height: initial;
+}
+
+.reporter-app .reporter .label {
+  margin: 0 .2em;
+  padding: .33em .33em;
+}
+
+.reporter-app .label-default{
   background-color:#ABABAB;
 }
 
-.panel-primary>.panel-heading .badge.error{
+.reporter-app .reporter .label.char-label{
+  padding: .1em .3em;
+  margin: 0 .2em;
+}
+
+
+.reporter-app .badge.error{
   background-color:#d9534f;
   color: #fff;
 }

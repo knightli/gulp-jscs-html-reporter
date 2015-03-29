@@ -17,6 +17,25 @@ var AppActions = {
     });
   },
 
+  toggleErrorsetExpand: function(errset) {
+    AppDispatcher.dispatch({
+      actionType: "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND",
+      errset: errset
+    });
+  },
+
+  toggleCodeExpandAll: function() {
+    AppDispatcher.dispatch({
+      actionType: "REPORTER_ERROR_TOGGLE_CODE_EXPAND_ALL"
+    });
+  },
+
+  toggleErrorsetExpandAll: function() {
+    AppDispatcher.dispatch({
+      actionType: "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND_ALL"
+    });
+  },
+
   xxxxxx: function(param) {
     AppDispatcher.dispatch({
       actionType: "XXXXXX",
@@ -34,23 +53,39 @@ var React = require('react');
 var ReporterApps = require('../components/ReporterApps.react.jsx');
 
 // 初始 state 从 initial-state 这个script tag 内拿 (server 首屏吐在这个tag里)
-function getAllReporters(){
+function getAllData(){
+  var data = {
+    reporters : [],
+    fileCount : 0,
+    errorCount : 0
+  };
   var stateScripts = document.querySelectorAll('.stateScript');
   stateScripts = Array.prototype.slice.call(stateScripts);
-  var reporters = [];
   stateScripts.map(function(script,idx) {
     var reporter = JSON.parse(script.innerHTML);
-    reporters.push(reporter);
+    data.reporters.push(reporter);
+    if(reporter.errsets.length) {
+      reporter.errsets.map(function(errset){
+        data.fileCount ++;
+        if(errset.errorList && errset.errorList.length) {
+          data.errorCount += errset.errorList.length;
+        }
+      })
+    }
   });
-  return reporters;
+  return data;
 }
 
-var reporters = getAllReporters();
+var data = getAllData();
+var reporters = data.reporters;
+var errorCount = data.errorCount;
+var fileCount = data.fileCount;
+
 var options = {expandCode:false, expandErrorSet: false};
 
 //defaultExpand true: 默认展开  false: 默认折叠
 React.render(
-  React.createElement(ReporterApps, {reporters: reporters, options: options}),
+  React.createElement(ReporterApps, {reporters: reporters, options: options, errorCount: errorCount, fileCount: fileCount}),
   document.getElementById('wrapper')
 );
 
@@ -237,6 +272,7 @@ module.exports = ErrorItemMsg;
 
 var React = require('react');
 var ErrorItem = require('./ErrorItem.react.jsx');
+var Helpers = require('../util/Helpers');
 
 var ErrorSet = React.createClass({displayName: "ErrorSet",
   render: function(){
@@ -251,14 +287,17 @@ var ErrorSet = React.createClass({displayName: "ErrorSet",
     }) : 'errsets length is 0';
 
     return (
-      React.createElement("div", {className: "error-set"}, content)
+      React.createElement("div", {className: Helpers.cx({
+        "error-set": true,
+        "hide": !data.expandErrorSet
+      })}, content)
     );
   }
 });
 
 module.exports = ErrorSet;
 
-},{"./ErrorItem.react.jsx":4,"react":172}],8:[function(require,module,exports){
+},{"../util/Helpers":174,"./ErrorItem.react.jsx":4,"react":172}],8:[function(require,module,exports){
 /** @jsx React.DOM */
 
 // JSCS 组件
@@ -289,10 +328,14 @@ var React = require('react');
 var Reporter = require('./Reporter.react.jsx');
 
 var AppStore = require('../store/AppStore');
+var AppActions = require('../actions/AppActions');
+var Helpers = require('../util/Helpers');
 
 function getStateFromStore(){
   var ret = {
-    reporters: AppStore.getData()
+    reporters: AppStore.getData(),
+    isAllErrorSetExpand: AppStore.isAllErrorSetExpand(),
+    isAllCodeExpand: AppStore.isAllCodeExpand()
   };
   return ret;
 }
@@ -314,6 +357,14 @@ var ReporterApps = React.createClass({displayName: "ReporterApps",
     AppStore.removeChangeListener(this._onChange);
   },
 
+  _toggleCodeExpandAll: function() {
+    AppActions.toggleCodeExpandAll();
+  },
+
+  _toggleErrorsetExpandAll: function() {
+    AppActions.toggleErrorsetExpandAll();
+  },
+
   _onChange: function() {
     this.setState(getStateFromStore());
   },
@@ -328,14 +379,33 @@ var ReporterApps = React.createClass({displayName: "ReporterApps",
     });
 
     return (
-      React.createElement("div", {id: "reporter-app"}, content)
+      React.createElement("div", {id: "reporter-app", className: "reporter-app"}, 
+        React.createElement("div", {className: "navbar navbar-inverse navbar-fixed-top"}, 
+          React.createElement("span", {className: "navbar-brand"}, "Found ", React.createElement("span", {className: "badge error"}, this.props.errorCount), " errors in ", this.props.fileCount, " files! "), 
+          React.createElement("label", {className: Helpers.cx({
+            "label-success": this.state.isAllCodeExpand,
+            "label-default": !this.state.isAllCodeExpand,
+            "navbar-toggle": true,
+            "label": true,
+          }), onClick: this._toggleCodeExpandAll}, "Ⓒ展开所有代码"), 
+          React.createElement("label", {className: Helpers.cx({
+            "label-success": this.state.isAllErrorSetExpand,
+            "label-default": !this.state.isAllErrorSetExpand,
+            "navbar-toggle": true,
+            "label": true,
+          }), onClick: this._toggleErrorsetExpandAll}, "Ⓓ展开所有详情")
+        ), 
+        React.createElement("div", {className: "reporters"}, 
+          content
+        )
+      )
     );
   }
 });
 
 module.exports = ReporterApps;
 
-},{"../store/AppStore":173,"./Reporter.react.jsx":8,"react":172}],10:[function(require,module,exports){
+},{"../actions/AppActions":1,"../store/AppStore":173,"../util/Helpers":174,"./Reporter.react.jsx":8,"react":172}],10:[function(require,module,exports){
 /** @jsx React.DOM */
 
 // Summary 组件: 展示总的错误提示信息
@@ -346,6 +416,9 @@ var AppActions = require('../actions/AppActions');
 var AppStore = require('../store/AppStore');
 
 var Summary = React.createClass({displayName: "Summary",
+  _toggleErrorsetExpand: function() {
+    AppActions.toggleErrorsetExpand(this.props.errsets[0]);
+  },
   _toggleCodeExpandErrorSet: function() {
     AppActions.toggleCodeExpandErrorSet(this.props.errsets[0]);
   },
@@ -358,13 +431,19 @@ var Summary = React.createClass({displayName: "Summary",
     return (
       React.createElement("div", {className: "summary panel-heading"}, 
         React.createElement("div", {className: "panel-title"}, 
+          React.createElement("code", null, filename), " found ", React.createElement("span", {className: "badge error"}, errorCount), " errors!", 
           React.createElement("label", {className: Helpers.cx({
             "label-success": isAllExpanded,
             "label-default": !isAllExpanded,
+            "navbar-toggle": true,
             "label": true,
-            "char-label": true
-          }), onClick: this._toggleCodeExpandErrorSet}, "Ⓒ"), 
-          React.createElement("code", null, filename), " found ", React.createElement("span", {className: "badge error"}, errorCount), " errors!"
+          }), onClick: this._toggleCodeExpandErrorSet}, "Ⓒ展开代码"), 
+          React.createElement("label", {className: Helpers.cx({
+            "label-success": errset.expandErrorSet,
+            "label-default": !errset.expandErrorSet,
+            "navbar-toggle": true,
+            "label": true,
+          }), onClick: this._toggleErrorsetExpand}, "Ⓓ展开详情")
         )
       )
     );
@@ -20822,7 +20901,6 @@ function init(reporters, options){
       }
     });
   }
-  console.log(reporters);
   _data = reporters;
 }
 
@@ -20831,7 +20909,6 @@ function getDataByKey(key){
   if(typeof key=="undefined") {
     return;
   }
-
 
   var paths = key.split('-').map(function(i){
     return parseInt(i,10);
@@ -20897,17 +20974,103 @@ function isAllCodeExpandedInErrorSet(errset){
   }
 }
 
+function isAllCodeExpand() {
+  var reporters = _data;
+
+  for(var i=0,len=reporters.length; i<len; i++) {
+    var errsets = reporters[i].errsets;
+
+    if(errsets) {
+      for(var j=0,l=errsets.length; j<l; j++) {
+        var errset = errsets[j];
+        if(!isAllCodeExpandedInErrorSet(errset)) return false;
+      }
+    }
+  }
+  return true;
+}
+
+function isAllErrorSetExpand() {
+  var reporters = _data;
+
+  for(var i=0,len=reporters.length; i<len; i++) {
+    var errsets = reporters[i].errsets;
+
+    if(errsets) {
+      for(var j=0,l=errsets.length; j<l; j++) {
+        var errset = errsets[j];
+        if(!errset.expandErrorSet) return false;
+      }
+    }
+  }
+  return true;
+}
+
+function setCodeExpandErrorSet(errset, flag) {
+  errset.errorList.map(function(error){
+    error.expandCode = flag;
+  });
+}
+
 function toggleCodeExpandErrorSet(errset) {
   if(useImmuteable) {
     errset = getDataByKey(errset.key);
   }
   if(errset) {
-
     var isAllExpanded = isAllCodeExpandedInErrorSet(errset);
+    setCodeExpandErrorSet(errset, !isAllExpanded);
+  }
+}
 
-    errset.errorList.map(function(error){
-      error.expandCode = !isAllExpanded;
-    });
+function toggleErrorSetExpand(errset) {
+  if(useImmuteable) {
+    errset = getDataByKey(errset.key);
+  }
+  if(errset) {
+
+    errset.expandErrorSet = !errset.expandErrorSet;
+
+  }
+}
+
+function toggleCodeExpandAll() {
+  var expandCode = true;
+  if(isAllCodeExpand()) {
+    expandCode = false;
+  }
+
+  var reporters = _data;
+
+  for(var i=0,len=reporters.length; i<len; i++) {
+
+    var errsets = reporters[i].errsets;
+
+    if(errsets) {
+      for(var j=0,l=errsets.length; j<l; j++) {
+        var errset = errsets[j];
+        setCodeExpandErrorSet(errset, expandCode);
+      }
+    }
+  }
+}
+
+function toggleErrorSetExpandAll() {
+  var expandErrorSet = true;
+  if(isAllErrorSetExpand()) {
+    expandErrorSet = false;
+  }
+
+  var reporters = _data;
+
+  for(var i=0,len=reporters.length; i<len; i++) {
+    var errsets = reporters[i].errsets;
+
+    if(errsets) {
+      for(var j=0,l=errsets.length; j<l; j++) {
+        var errset = errsets[j];
+        errset.expandErrorSet = expandErrorSet;
+      }
+    }
   }
 }
 
@@ -20917,6 +21080,8 @@ var AppStore = assign({}, EventEmitter.prototype, {
     return _data;
   },
   isAllCodeExpandedInErrorSet: isAllCodeExpandedInErrorSet,
+  isAllCodeExpand: isAllCodeExpand,
+  isAllErrorSetExpand: isAllErrorSetExpand,
   emitChange: function(){
     this.emit(CHANGE_EVENT);
   },
@@ -20939,6 +21104,21 @@ AppDispatcher.register(function(action) {
 
     case "REPORTER_ERROR_TOGGLE_CODE_EXPAND_ERROR_SET":
       toggleCodeExpandErrorSet(action.errset);
+      AppStore.emitChange();
+      break;
+
+    case "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND":
+      toggleErrorSetExpand(action.errset);
+      AppStore.emitChange();
+      break;
+
+    case "REPORTER_ERROR_TOGGLE_CODE_EXPAND_ALL":
+      toggleCodeExpandAll();
+      AppStore.emitChange();
+      break;
+
+    case "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND_ALL":
+      toggleErrorSetExpandAll();
       AppStore.emitChange();
       break;
 
