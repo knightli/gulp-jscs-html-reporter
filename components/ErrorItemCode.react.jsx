@@ -57,7 +57,7 @@ var ErrorItemCode = React.createClass({
     var content = lines.map(function(l) {
       var i = l.line;
       var code = l.code;
-      if(i==line-1) return renderLine(code, i, column);
+      if(i==line) return renderLine(code, i, column);
       else return renderLine(code, i);
     });
 

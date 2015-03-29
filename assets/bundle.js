@@ -34,13 +34,6 @@ var AppActions = {
     AppDispatcher.dispatch({
       actionType: "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND_ALL"
     });
-  },
-
-  xxxxxx: function(param) {
-    AppDispatcher.dispatch({
-      actionType: "XXXXXX",
-      param: param
-    });
   }
 };
 
@@ -206,7 +199,7 @@ var ErrorItemCode = React.createClass({displayName: "ErrorItemCode",
     var content = lines.map(function(l) {
       var i = l.line;
       var code = l.code;
-      if(i==line-1) return renderLine(code, i, column);
+      if(i==line) return renderLine(code, i, column);
       else return renderLine(code, i);
     });
 
@@ -21119,11 +21112,6 @@ AppDispatcher.register(function(action) {
 
     case "REPORTER_ERROR_TOGGLE_ERROR_SET_EXPAND_ALL":
       toggleErrorSetExpandAll();
-      AppStore.emitChange();
-      break;
-
-    case "XXXXXX":
-      xxxxxx();
       AppStore.emitChange();
       break;
 
