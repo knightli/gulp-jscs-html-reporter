@@ -13,7 +13,7 @@ var ErrorItemMsg = React.createClass({
     var error = this.props.error;
     var filename = this.props.filename;
 
-    var message = Helpers.encodeHtml(error.message);
+    var message = error.message;
     var line = error.line;
     var column = error.column;
 
@@ -26,7 +26,7 @@ var ErrorItemMsg = React.createClass({
           "char-label": true
         })}
           onClick={this._toggleCodeExpand}>Ⓒ {line},{column}</label>
-        <span className="error-item-msg-text panel-title">msg</span>
+        <span className="error-item-msg-text panel-title">{message}</span>
       </div>
     );
   }
