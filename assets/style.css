@@ -45,8 +45,8 @@
 .reporter-app .navbar-fixed-top .timestamp{
   position: absolute;
   left: 0;
-  top: 31px;
-  font-size: 12px;
+  top: 35px;
+  font-size: 11px;
   color: green;
   padding-left: 15px;
 }
