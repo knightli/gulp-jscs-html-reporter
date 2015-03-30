@@ -598,7 +598,7 @@ function isAllCodeExpandedInErrorSet(errset){
 function isAllCodeExpand() {
   var reporters = _data;
 
-  for (var i = 0,len = errset.errorList.length; i < len; i++) {
+  for (var i = 0,len = reporters.length; i < len; i++) {
     var errsets = reporters[i].errsets;
 
     if (errsets) {
@@ -616,7 +616,7 @@ function isAllCodeExpand() {
 function isAllErrorSetExpand() {
   var reporters = _data;
 
-  for (var i = 0,len = errset.errorList.length; i < len; i++) {
+  for (var i = 0,len = reporters.length; i < len; i++) {
     var errsets = reporters[i].errsets;
 
     if (errsets) {
@@ -666,7 +666,7 @@ function toggleCodeExpandAll() {
 
   var reporters = _data;
 
-  for (var i = 0,len = errset.errorList.length; i < len; i++) {
+  for (var i = 0,len = reporters.length; i < len; i++) {
 
     var errsets = reporters[i].errsets;
 
@@ -687,7 +687,7 @@ function toggleErrorSetExpandAll() {
 
   var reporters = _data;
 
-  for (var i = 0,len = errset.errorList.length; i < len; i++) {
+  for (var i = 0,len = reporters.length; i < len; i++) {
     var errsets = reporters[i].errsets;
 
     if (errsets) {
