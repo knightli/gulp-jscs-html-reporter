@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var ReporterApps = require('../components/ReporterApps.react.jsx');
+var ReporterApps = require('../lib/components/ReporterApps.react.jsx');
 var assign = require('object-assign');
 
 // 初始 state 从 initial-state 这个script tag 内拿 (server 首屏吐在这个tag里)
