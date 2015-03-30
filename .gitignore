@@ -2,6 +2,7 @@
 
 # User config
 *.ignore.*
+!jscs-output.ignore.html
 
 # Compiled
 
