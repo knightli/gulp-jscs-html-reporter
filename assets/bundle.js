@@ -48,6 +48,7 @@ var assign = require('object-assign');
 
 // 初始 state 从 initial-state 这个script tag 内拿 (server 首屏吐在这个tag里)
 function getInitState(){
+  /*
   var data = {
     reporters : [],
     fileCount : 0,
@@ -73,6 +74,12 @@ function getInitState(){
       })
     }
   });
+  */
+
+  var stateScripts = document.querySelectorAll('.stateScript');
+  var stateScript = stateScripts[0];
+  var data = JSON.parse(stateScript.innerHTML);
+
   return data;
 }
 
@@ -213,7 +220,9 @@ var ErrorItemCode = React.createClass({displayName: "ErrorItemCode",
         "hide": !error.expandCode
       })}, 
         React.createElement("table", null, 
-          content
+          React.createElement("tbody", null, 
+            content
+          )
         )
       )
     );
@@ -238,7 +247,7 @@ var ErrorItemMsg = React.createClass({displayName: "ErrorItemMsg",
     var error = this.props.error;
     var filename = this.props.filename;
 
-    var message = error.message;
+    var message = Helpers.encodeHtml(error.message);
     var line = error.line;
     var column = error.column;
 
@@ -251,9 +260,7 @@ var ErrorItemMsg = React.createClass({displayName: "ErrorItemMsg",
           "char-label": true
         }), 
           onClick: this._toggleCodeExpand}, "Ⓒ ", line, ",", column), 
-        React.createElement("span", {className: "error-item-msg-text panel-title"}, 
-          message
-        )
+        React.createElement("span", {className: "error-item-msg-text panel-title"}, "msg")
       )
     );
   }
@@ -388,9 +395,7 @@ var ReporterApps = React.createClass({displayName: "ReporterApps",
         React.createElement(Reporter, {key: reporter.key, errsets: reporter.errsets, options: reporter.options})
       );
     });
-    console.log('this.props:',this.props);
     var timeStr = getTimeStr(this.props.options.time);
-
 
     return (
       React.createElement("div", {id: "reporter-app", className: "reporter-app"}, 
@@ -21145,6 +21150,8 @@ AppDispatcher.register(function(action) {
 module.exports = AppStore;
 
 },{"../dispatcher/AppDispatcher.js":11,"events":12,"object-assign":17}],174:[function(require,module,exports){
+var escapeTextContentForBrowser = require('./escapeTextContentForBrowser');
+
 module.exports = {
   cx: function(classNames) {
     if (typeof classNames == 'object') {
@@ -21155,21 +21162,12 @@ module.exports = {
       return Array.prototype.join.call(arguments, ' ');
     }
   },
-  encodeHtml: function(string) {
-    var entitiesMap = {
-      '&': '&amp;',
-      '"': '&quot;',
-      '<': '&lt;',
-      '>': '&gt;'
-    };
-
-    return (string || '').replace(/(&|"|<|>)/g, function (entity) {
-      return entitiesMap[entity];
-    });
-  },
+  encodeHtml: escapeTextContentForBrowser,
   spaceTrans: function(input) {
     return input.replace(/\t/g, '&nbsp;').replace(/ /g,'&nbsp;')
   }
 }
 
-},{}]},{},[2]);
+},{"./escapeTextContentForBrowser":175}],175:[function(require,module,exports){
+module.exports=require(133)
+},{"/Users/knightli/workspace/github/dir2text/gulp-jscs-html-reporter/node_modules/react/lib/escapeTextContentForBrowser.js":133}]},{},[2]);

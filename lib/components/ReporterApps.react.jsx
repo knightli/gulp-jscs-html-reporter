@@ -70,9 +70,7 @@ var ReporterApps = React.createClass({
         <Reporter key={reporter.key} errsets={reporter.errsets} options={reporter.options} />
       );
     });
-    console.log('this.props:',this.props);
     var timeStr = getTimeStr(this.props.options.time);
-
 
     return (
       <div id="reporter-app" className="reporter-app">

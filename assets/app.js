@@ -6,6 +6,7 @@ var assign = require('object-assign');
 
 // 初始 state 从 initial-state 这个script tag 内拿 (server 首屏吐在这个tag里)
 function getInitState(){
+  /*
   var data = {
     reporters : [],
     fileCount : 0,
@@ -31,6 +32,12 @@ function getInitState(){
       })
     }
   });
+  */
+
+  var stateScripts = document.querySelectorAll('.stateScript');
+  var stateScript = stateScripts[0];
+  var data = JSON.parse(stateScript.innerHTML);
+
   return data;
 }
 

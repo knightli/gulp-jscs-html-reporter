@@ -68,7 +68,9 @@ var ErrorItemCode = React.createClass({
         "hide": !error.expandCode
       })}>
         <table>
-          {content}
+          <tbody>
+            {content}
+          </tbody>
         </table>
       </div>
     );

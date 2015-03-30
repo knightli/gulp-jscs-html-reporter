@@ -15,7 +15,8 @@ logs
 *.log
 npm-debug.log
 nohup.out
-jshint-output.html
+jshint-output*.html
+jscs-output*.html
 
 # Runtime data
 pids
