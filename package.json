@@ -25,6 +25,12 @@
     "gulp-util": "^3.0.0"
   },
   "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-jscs-with-reporter": "^1.4.0",
+    "gulp-jshint": "^1.9.4",
+    "gulp-jshint-html-reporter": "^0.1.2",
+    "jshint-html-reporter": "^0.2.3",
+    "jshint-stylish": "^1.0.1",
     "browserify": "^6.2.0",
     "reactify": "^0.15.2",
     "uglify-js": "~2.4.15"

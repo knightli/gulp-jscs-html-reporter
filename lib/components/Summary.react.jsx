@@ -28,13 +28,13 @@ var Summary = React.createClass({
             "label-success": isAllExpanded,
             "label-default": !isAllExpanded,
             "navbar-toggle": true,
-            "label": true,
+            "label": true
           })} onClick={this._toggleCodeExpandErrorSet}>Ⓒ展开代码</label>
           <label className={Helpers.cx({
             "label-success": errset.expandErrorSet,
             "label-default": !errset.expandErrorSet,
             "navbar-toggle": true,
-            "label": true,
+            "label": true
           })} onClick={this._toggleErrorsetExpand}>Ⓓ展开详情</label>
         </div>
       </div>

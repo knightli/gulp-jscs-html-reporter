@@ -29,7 +29,7 @@ function getTimeStr(time) {
   hh = hh < 10 ? "0" + hh : hh;
   mm = mm < 10 ? "0" + mm : mm;
 
-  var str = (time.getFullYear() + "年") + (time.getMonth() - -1) + "月" + day + "日 " + hh + ":" + mm;
+  var str = (time.getFullYear() + "年") + (time.getMonth() - (-1)) + "月" + day + "日 " + hh + ":" + mm;
   return str;
 }
 
@@ -81,13 +81,13 @@ var ReporterApps = React.createClass({
             "label-success": this.state.isAllCodeExpand,
             "label-default": !this.state.isAllCodeExpand,
             "navbar-toggle": true,
-            "label": true,
+            "label": true
           })} onClick={this._toggleCodeExpandAll}>Ⓒ展开所有代码</label>
           <label className={Helpers.cx({
             "label-success": this.state.isAllErrorSetExpand,
             "label-default": !this.state.isAllErrorSetExpand,
             "navbar-toggle": true,
-            "label": true,
+            "label": true
           })} onClick={this._toggleErrorsetExpandAll}>Ⓓ展开所有详情</label>
         </div>
         <div className="reporters">
