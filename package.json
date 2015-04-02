@@ -1,6 +1,6 @@
 {
   "name": "gulp-jscs-html-reporter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple generator of HTML report for gulp-jssc that writes its output to a html file which looks pretty",
   "license": "MIT",
   "engines": {
