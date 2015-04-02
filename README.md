@@ -36,4 +36,4 @@ Plugin options:
 Type: filename Default: "jscs-default-output.html"
 
 ## output html
-![alt text](./screenshot.png 'JSCS HTML Reporter output')
+![alt text](https://github.com/knightli/gulp-jscs-html-reporter/raw/master/screenshot.png 'JSCS HTML Reporter output')
